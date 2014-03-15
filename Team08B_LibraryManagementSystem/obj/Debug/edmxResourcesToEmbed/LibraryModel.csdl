@@ -1,0 +1,241 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="LibraryModel" Alias="Self" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns="http://schemas.microsoft.com/ado/2008/09/edm">
+  <EntityContainer Name="LibraryEntities" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="Books" EntityType="LibraryModel.Book" />
+    <EntitySet Name="BookCategories" EntityType="LibraryModel.BookCategory" />
+    <EntitySet Name="BookCopies" EntityType="LibraryModel.BookCopy" />
+    <EntitySet Name="Issues" EntityType="LibraryModel.Issue" />
+    <EntitySet Name="IssueDetails" EntityType="LibraryModel.IssueDetail" />
+    <EntitySet Name="Members" EntityType="LibraryModel.Member" />
+    <EntitySet Name="sysdiagrams" EntityType="LibraryModel.sysdiagram" />
+    <AssociationSet Name="FK_Book_BookCategory" Association="LibraryModel.FK_Book_BookCategory">
+      <End Role="BookCategory" EntitySet="BookCategories" />
+      <End Role="Book" EntitySet="Books" />
+    </AssociationSet>
+    <AssociationSet Name="FK_BookCopy_Book" Association="LibraryModel.FK_BookCopy_Book">
+      <End Role="Book" EntitySet="Books" />
+      <End Role="BookCopy" EntitySet="BookCopies" />
+    </AssociationSet>
+    <AssociationSet Name="FK_IssueDetail_BookCopy" Association="LibraryModel.FK_IssueDetail_BookCopy">
+      <End Role="BookCopy" EntitySet="BookCopies" />
+      <End Role="IssueDetail" EntitySet="IssueDetails" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Issue_Member" Association="LibraryModel.FK_Issue_Member">
+      <End Role="Member" EntitySet="Members" />
+      <End Role="Issue" EntitySet="Issues" />
+    </AssociationSet>
+    <AssociationSet Name="FK_IssueDetail_Issue" Association="LibraryModel.FK_IssueDetail_Issue">
+      <End Role="Issue" EntitySet="Issues" />
+      <End Role="IssueDetail" EntitySet="IssueDetails" />
+    </AssociationSet>
+    <FunctionImport Name="BookLendByMemberSP" ReturnType="Collection(LibraryModel.BookLendByMemberSP_Result)">
+      <Parameter Name="memberID" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="GetBookByCriteria" ReturnType="Collection(LibraryModel.GetBookByCriteria_Result)">
+      <Parameter Name="criteria" Mode="In" Type="String" />
+      <Parameter Name="keywordINT" Mode="In" Type="Int32" />
+      <Parameter Name="keywordSTR" Mode="In" Type="String" />
+      <Parameter Name="keywordDT" Mode="In" Type="DateTime" />
+    </FunctionImport>
+    <FunctionImport Name="GetLoanBookInfo" ReturnType="Collection(LibraryModel.GetLoanBookInfo_Result)">
+      <Parameter Name="bookCopyID" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="GetBookSP" ReturnType="Collection(LibraryModel.GetBookSP_Result)" />
+    <FunctionImport Name="BookInfo" ReturnType="Collection(LibraryModel.BookInfo_Result)">
+      <Parameter Name="bookId" Mode="In" Type="Int32" />
+    </FunctionImport>
+  </EntityContainer>
+  <EntityType Name="Book">
+    <Key>
+      <PropertyRef Name="BookID" />
+    </Key>
+    <Property Name="BookID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="ISBN" Type="String" MaxLength="20" Unicode="true" FixedLength="false" />
+    <Property Name="Title" Type="String" Nullable="false" MaxLength="50" Unicode="true" FixedLength="false" />
+    <Property Name="CategoryID" Type="Int32" Nullable="false" />
+    <Property Name="Author" Type="String" Nullable="false" MaxLength="60" Unicode="true" FixedLength="false" />
+    <Property Name="Publisher" Type="String" Nullable="false" MaxLength="50" Unicode="true" FixedLength="false" />
+    <Property Name="Edition" Type="Int32" Nullable="false" />
+    <Property Name="YearOfPublishion" Type="DateTime" Nullable="false" Precision="0" />
+    <NavigationProperty Name="BookCategory" Relationship="LibraryModel.FK_Book_BookCategory" FromRole="Book" ToRole="BookCategory" />
+    <NavigationProperty Name="BookCopies" Relationship="LibraryModel.FK_BookCopy_Book" FromRole="Book" ToRole="BookCopy" />
+  </EntityType>
+  <EntityType Name="BookCategory">
+    <Key>
+      <PropertyRef Name="CategoryID" />
+    </Key>
+    <Property Name="CategoryID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="CategoryDescription" Type="String" Nullable="false" MaxLength="40" Unicode="true" FixedLength="false" />
+    <NavigationProperty Name="Books" Relationship="LibraryModel.FK_Book_BookCategory" FromRole="BookCategory" ToRole="Book" />
+  </EntityType>
+  <EntityType Name="BookCopy">
+    <Key>
+      <PropertyRef Name="BookCopyID" />
+    </Key>
+    <Property Name="BookCopyID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="BookID" Type="Int32" Nullable="false" />
+    <Property Name="BookShelfNo" Type="String" Nullable="false" MaxLength="10" Unicode="true" FixedLength="false" />
+    <Property Name="Status" Type="String" Nullable="false" MaxLength="20" Unicode="true" FixedLength="false" />
+    <NavigationProperty Name="Book" Relationship="LibraryModel.FK_BookCopy_Book" FromRole="BookCopy" ToRole="Book" />
+    <NavigationProperty Name="IssueDetails" Relationship="LibraryModel.FK_IssueDetail_BookCopy" FromRole="BookCopy" ToRole="IssueDetail" />
+  </EntityType>
+  <EntityType Name="Issue">
+    <Key>
+      <PropertyRef Name="IssueID" />
+    </Key>
+    <Property Name="IssueID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="MemberID" Type="Int32" Nullable="false" />
+    <Property Name="IssueDate" Type="DateTime" Nullable="false" Precision="0" />
+    <Property Name="DueDate" Type="DateTime" Nullable="false" Precision="0" />
+    <NavigationProperty Name="Member" Relationship="LibraryModel.FK_Issue_Member" FromRole="Issue" ToRole="Member" />
+    <NavigationProperty Name="IssueDetails" Relationship="LibraryModel.FK_IssueDetail_Issue" FromRole="Issue" ToRole="IssueDetail" />
+  </EntityType>
+  <EntityType Name="IssueDetail">
+    <Key>
+      <PropertyRef Name="IssueID" />
+      <PropertyRef Name="BookCopyID" />
+    </Key>
+    <Property Name="IssueID" Type="Int32" Nullable="false" />
+    <Property Name="BookCopyID" Type="Int32" Nullable="false" />
+    <Property Name="ReturnDate" Type="DateTime" Precision="0" />
+    <NavigationProperty Name="BookCopy" Relationship="LibraryModel.FK_IssueDetail_BookCopy" FromRole="IssueDetail" ToRole="BookCopy" />
+    <NavigationProperty Name="Issue" Relationship="LibraryModel.FK_IssueDetail_Issue" FromRole="IssueDetail" ToRole="Issue" />
+  </EntityType>
+  <EntityType Name="Member">
+    <Key>
+      <PropertyRef Name="MemberID" />
+    </Key>
+    <Property Name="MemberID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="FirstName" Type="String" Nullable="false" MaxLength="20" Unicode="true" FixedLength="false" />
+    <Property Name="LastName" Type="String" Nullable="false" MaxLength="20" Unicode="true" FixedLength="false" />
+    <Property Name="Email" Type="String" Nullable="false" MaxLength="30" Unicode="true" FixedLength="false" />
+    <Property Name="Address" Type="String" Nullable="false" MaxLength="50" Unicode="true" FixedLength="false" />
+    <Property Name="PhoneNo" Type="String" Nullable="false" MaxLength="20" Unicode="true" FixedLength="false" />
+    <NavigationProperty Name="Issues" Relationship="LibraryModel.FK_Issue_Member" FromRole="Member" ToRole="Issue" />
+  </EntityType>
+  <EntityType Name="sysdiagram">
+    <Key>
+      <PropertyRef Name="diagram_id" />
+    </Key>
+    <Property Name="name" Type="String" Nullable="false" MaxLength="128" Unicode="true" FixedLength="false" />
+    <Property Name="principal_id" Type="Int32" Nullable="false" />
+    <Property Name="diagram_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="version" Type="Int32" />
+    <Property Name="definition" Type="Binary" MaxLength="Max" FixedLength="false" />
+  </EntityType>
+  <Association Name="FK_Book_BookCategory">
+    <End Role="BookCategory" Type="LibraryModel.BookCategory" Multiplicity="1" />
+    <End Role="Book" Type="LibraryModel.Book" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="BookCategory">
+        <PropertyRef Name="CategoryID" />
+      </Principal>
+      <Dependent Role="Book">
+        <PropertyRef Name="CategoryID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_BookCopy_Book">
+    <End Role="Book" Type="LibraryModel.Book" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="BookCopy" Type="LibraryModel.BookCopy" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Book">
+        <PropertyRef Name="BookID" />
+      </Principal>
+      <Dependent Role="BookCopy">
+        <PropertyRef Name="BookID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_IssueDetail_BookCopy">
+    <End Role="BookCopy" Type="LibraryModel.BookCopy" Multiplicity="1" />
+    <End Role="IssueDetail" Type="LibraryModel.IssueDetail" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="BookCopy">
+        <PropertyRef Name="BookCopyID" />
+      </Principal>
+      <Dependent Role="IssueDetail">
+        <PropertyRef Name="BookCopyID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Issue_Member">
+    <End Role="Member" Type="LibraryModel.Member" Multiplicity="1" />
+    <End Role="Issue" Type="LibraryModel.Issue" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Member">
+        <PropertyRef Name="MemberID" />
+      </Principal>
+      <Dependent Role="Issue">
+        <PropertyRef Name="MemberID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_IssueDetail_Issue">
+    <End Role="Issue" Type="LibraryModel.Issue" Multiplicity="1" />
+    <End Role="IssueDetail" Type="LibraryModel.IssueDetail" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Issue">
+        <PropertyRef Name="IssueID" />
+      </Principal>
+      <Dependent Role="IssueDetail">
+        <PropertyRef Name="IssueID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <ComplexType Name="BookLendByMemberSP_Result">
+    <Property Type="Int32" Name="BookCopyID" Nullable="false" />
+    <Property Type="String" Name="ISBN" Nullable="true" MaxLength="20" />
+    <Property Type="String" Name="Title" Nullable="false" MaxLength="50" />
+    <Property Type="String" Name="Status" Nullable="false" MaxLength="20" />
+    <Property Type="Int32" Name="MemberID" Nullable="false" />
+    <Property Type="DateTime" Name="DueDate" Nullable="false" />
+    <Property Type="DateTime" Name="ReturnDate" Nullable="true" />
+  </ComplexType>
+  <ComplexType Name="GetBookByCriteria_Result">
+    <Property Type="Int32" Name="BookCopyID" Nullable="false" />
+    <Property Type="String" Name="ISBN" Nullable="true" MaxLength="20" />
+    <Property Type="String" Name="Title" Nullable="false" MaxLength="50" />
+    <Property Type="String" Name="CategoryDescription" Nullable="false" MaxLength="40" />
+    <Property Type="String" Name="Author" Nullable="false" MaxLength="60" />
+    <Property Type="String" Name="Publisher" Nullable="false" MaxLength="50" />
+    <Property Type="Int32" Name="Edition" Nullable="false" />
+    <Property Type="DateTime" Name="YearOfPublishion" Nullable="false" />
+    <Property Type="String" Name="BookShelfNo" Nullable="false" MaxLength="10" />
+    <Property Type="String" Name="Status" Nullable="false" MaxLength="20" />
+  </ComplexType>
+  <ComplexType Name="GetLoanBookInfo_Result">
+    <Property Type="Int32" Name="BookCopyID" Nullable="false" />
+    <Property Type="String" Name="ISBN" Nullable="true" MaxLength="20" />
+    <Property Type="String" Name="Title" Nullable="false" MaxLength="50" />
+    <Property Type="String" Name="CategoryDescription" Nullable="false" MaxLength="40" />
+    <Property Type="DateTime" Name="DueDate" Nullable="false" />
+    <Property Type="String" Name="Status" Nullable="false" MaxLength="20" />
+    <Property Type="Int32" Name="MemberID" Nullable="false" />
+    <Property Type="String" Name="FirstName" Nullable="false" MaxLength="20" />
+    <Property Type="String" Name="LastName" Nullable="false" MaxLength="20" />
+    <Property Type="Int32" Name="IssueID" Nullable="false" />
+  </ComplexType>
+  <ComplexType Name="GetBookSP_Result">
+    <Property Type="Int32" Name="BookID" Nullable="false" />
+    <Property Type="String" Name="ISBN" Nullable="true" MaxLength="20" />
+    <Property Type="String" Name="Title" Nullable="false" MaxLength="50" />
+    <Property Type="String" Name="CategoryDescription" Nullable="false" MaxLength="40" />
+    <Property Type="String" Name="Author" Nullable="false" MaxLength="60" />
+    <Property Type="String" Name="Publisher" Nullable="false" MaxLength="50" />
+    <Property Type="Int32" Name="Edition" Nullable="false" />
+    <Property Type="DateTime" Name="YearOfPublishion" Nullable="false" />
+    <Property Type="Int32" Name="CategoryID" Nullable="false" />
+  </ComplexType>
+  <ComplexType Name="BookInfo_Result">
+    <Property Type="Int32" Name="BookCopyID" Nullable="false" />
+    <Property Type="String" Name="ISBN" Nullable="true" MaxLength="20" />
+    <Property Type="String" Name="Title" Nullable="false" MaxLength="50" />
+    <Property Type="String" Name="Author" Nullable="false" MaxLength="60" />
+    <Property Type="String" Name="CategoryDescription" Nullable="false" MaxLength="40" />
+    <Property Type="String" Name="Status" Nullable="false" MaxLength="20" />
+    <Property Type="String" Name="BookShelfNo" Nullable="false" MaxLength="10" />
+  </ComplexType>
+</Schema>

@@ -1,0 +1,178 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="LibraryModel.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2008" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/02/edm/ssdl">
+  <EntityContainer Name="LibraryModelStoreContainer">
+    <EntitySet Name="Book" EntityType="LibraryModel.Store.Book" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="BookCategory" EntityType="LibraryModel.Store.BookCategory" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="BookCopy" EntityType="LibraryModel.Store.BookCopy" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="Issue" EntityType="LibraryModel.Store.Issue" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="IssueDetail" EntityType="LibraryModel.Store.IssueDetail" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="Member" EntityType="LibraryModel.Store.Member" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="sysdiagrams" EntityType="LibraryModel.Store.sysdiagrams" store:Type="Tables" Schema="dbo" />
+    <AssociationSet Name="FK_Book_BookCategory" Association="LibraryModel.Store.FK_Book_BookCategory">
+      <End Role="BookCategory" EntitySet="BookCategory" />
+      <End Role="Book" EntitySet="Book" />
+    </AssociationSet>
+    <AssociationSet Name="FK_BookCopy_Book" Association="LibraryModel.Store.FK_BookCopy_Book">
+      <End Role="Book" EntitySet="Book" />
+      <End Role="BookCopy" EntitySet="BookCopy" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Issue_Member" Association="LibraryModel.Store.FK_Issue_Member">
+      <End Role="Member" EntitySet="Member" />
+      <End Role="Issue" EntitySet="Issue" />
+    </AssociationSet>
+    <AssociationSet Name="FK_IssueDetail_BookCopy" Association="LibraryModel.Store.FK_IssueDetail_BookCopy">
+      <End Role="BookCopy" EntitySet="BookCopy" />
+      <End Role="IssueDetail" EntitySet="IssueDetail" />
+    </AssociationSet>
+    <AssociationSet Name="FK_IssueDetail_Issue" Association="LibraryModel.Store.FK_IssueDetail_Issue">
+      <End Role="Issue" EntitySet="Issue" />
+      <End Role="IssueDetail" EntitySet="IssueDetail" />
+    </AssociationSet>
+  </EntityContainer>
+  <EntityType Name="Book">
+    <Key>
+      <PropertyRef Name="BookID" />
+    </Key>
+    <Property Name="BookID" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+    <Property Name="ISBN" Type="nvarchar" MaxLength="20" />
+    <Property Name="Title" Type="nvarchar" Nullable="false" MaxLength="50" />
+    <Property Name="CategoryID" Type="int" Nullable="false" />
+    <Property Name="Author" Type="nvarchar" Nullable="false" MaxLength="60" />
+    <Property Name="Publisher" Type="nvarchar" Nullable="false" MaxLength="50" />
+    <Property Name="Edition" Type="int" Nullable="false" />
+    <Property Name="YearOfPublishion" Type="date" Nullable="false" />
+  </EntityType>
+  <EntityType Name="BookCategory">
+    <Key>
+      <PropertyRef Name="CategoryID" />
+    </Key>
+    <Property Name="CategoryID" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+    <Property Name="CategoryDescription" Type="nvarchar" Nullable="false" MaxLength="40" />
+  </EntityType>
+  <EntityType Name="BookCopy">
+    <Key>
+      <PropertyRef Name="BookCopyID" />
+    </Key>
+    <Property Name="BookCopyID" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+    <Property Name="BookID" Type="int" Nullable="false" />
+    <Property Name="BookShelfNo" Type="nvarchar" Nullable="false" MaxLength="10" />
+    <Property Name="Status" Type="nvarchar" Nullable="false" MaxLength="20" />
+  </EntityType>
+  <EntityType Name="Issue">
+    <Key>
+      <PropertyRef Name="IssueID" />
+    </Key>
+    <Property Name="IssueID" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+    <Property Name="MemberID" Type="int" Nullable="false" />
+    <Property Name="IssueDate" Type="date" Nullable="false" />
+    <Property Name="DueDate" Type="date" Nullable="false" />
+  </EntityType>
+  <EntityType Name="IssueDetail">
+    <Key>
+      <PropertyRef Name="IssueID" />
+      <PropertyRef Name="BookCopyID" />
+    </Key>
+    <Property Name="IssueID" Type="int" Nullable="false" />
+    <Property Name="BookCopyID" Type="int" Nullable="false" />
+    <Property Name="ReturnDate" Type="date" />
+  </EntityType>
+  <EntityType Name="Member">
+    <Key>
+      <PropertyRef Name="MemberID" />
+    </Key>
+    <Property Name="MemberID" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+    <Property Name="FirstName" Type="nvarchar" Nullable="false" MaxLength="20" />
+    <Property Name="LastName" Type="nvarchar" Nullable="false" MaxLength="20" />
+    <Property Name="Email" Type="nvarchar" Nullable="false" MaxLength="30" />
+    <Property Name="Address" Type="nvarchar" Nullable="false" MaxLength="50" />
+    <Property Name="PhoneNo" Type="nvarchar" Nullable="false" MaxLength="20" />
+  </EntityType>
+  <EntityType Name="sysdiagrams">
+    <Key>
+      <PropertyRef Name="diagram_id" />
+    </Key>
+    <Property Name="name" Type="nvarchar" Nullable="false" MaxLength="128" />
+    <Property Name="principal_id" Type="int" Nullable="false" />
+    <Property Name="diagram_id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+    <Property Name="version" Type="int" />
+    <Property Name="definition" Type="varbinary(max)" />
+  </EntityType>
+  <Association Name="FK_Book_BookCategory">
+    <End Role="BookCategory" Type="LibraryModel.Store.BookCategory" Multiplicity="1" />
+    <End Role="Book" Type="LibraryModel.Store.Book" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="BookCategory">
+        <PropertyRef Name="CategoryID" />
+      </Principal>
+      <Dependent Role="Book">
+        <PropertyRef Name="CategoryID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_BookCopy_Book">
+    <End Role="Book" Type="LibraryModel.Store.Book" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="BookCopy" Type="LibraryModel.Store.BookCopy" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Book">
+        <PropertyRef Name="BookID" />
+      </Principal>
+      <Dependent Role="BookCopy">
+        <PropertyRef Name="BookID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Issue_Member">
+    <End Role="Member" Type="LibraryModel.Store.Member" Multiplicity="1" />
+    <End Role="Issue" Type="LibraryModel.Store.Issue" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Member">
+        <PropertyRef Name="MemberID" />
+      </Principal>
+      <Dependent Role="Issue">
+        <PropertyRef Name="MemberID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_IssueDetail_BookCopy">
+    <End Role="BookCopy" Type="LibraryModel.Store.BookCopy" Multiplicity="1" />
+    <End Role="IssueDetail" Type="LibraryModel.Store.IssueDetail" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="BookCopy">
+        <PropertyRef Name="BookCopyID" />
+      </Principal>
+      <Dependent Role="IssueDetail">
+        <PropertyRef Name="BookCopyID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_IssueDetail_Issue">
+    <End Role="Issue" Type="LibraryModel.Store.Issue" Multiplicity="1" />
+    <End Role="IssueDetail" Type="LibraryModel.Store.IssueDetail" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Issue">
+        <PropertyRef Name="IssueID" />
+      </Principal>
+      <Dependent Role="IssueDetail">
+        <PropertyRef Name="IssueID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Function Name="BookInfo" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="bookId" Type="int" Mode="In" />
+  </Function>
+  <Function Name="BookLendByMemberSP" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="memberID" Type="int" Mode="In" />
+  </Function>
+  <Function Name="GetBookByCriteria" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="criteria" Type="nvarchar" Mode="In" />
+    <Parameter Name="keywordINT" Type="int" Mode="In" />
+    <Parameter Name="keywordSTR" Type="nvarchar" Mode="In" />
+    <Parameter Name="keywordDT" Type="datetime" Mode="In" />
+  </Function>
+  <Function Name="GetBookSP" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+  <Function Name="GetLoanBookInfo" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="bookCopyID" Type="int" Mode="In" />
+  </Function>
+</Schema>

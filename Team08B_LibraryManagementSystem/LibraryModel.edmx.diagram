@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="2.0" xmlns:edmx="http://schemas.microsoft.com/ado/2008/10/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2008/10/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="46ce2e5f5fc3433586044a76c93511dd" Name="Diagram1">
+        <EntityTypeShape EntityType="LibraryModel.Book" Width="1.5" PointX="3" PointY="1" IsExpanded="true" />
+        <EntityTypeShape EntityType="LibraryModel.BookCategory" Width="1.5" PointX="0.75" PointY="1.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="LibraryModel.BookCopy" Width="1.5" PointX="5.25" PointY="1.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="LibraryModel.Issue" Width="1.5" PointX="5.25" PointY="5.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="LibraryModel.IssueDetail" Width="1.5" PointX="7.5" PointY="1.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="LibraryModel.Member" Width="1.5" PointX="3" PointY="5.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="LibraryModel.sysdiagram" Width="1.5" PointX="8.25" PointY="4.375" IsExpanded="true" />
+        <AssociationConnector Association="LibraryModel.FK_Book_BookCategory" ManuallyRouted="false" />
+        <AssociationConnector Association="LibraryModel.FK_BookCopy_Book" ManuallyRouted="false" />
+        <AssociationConnector Association="LibraryModel.FK_IssueDetail_BookCopy" ManuallyRouted="false" />
+        <AssociationConnector Association="LibraryModel.FK_Issue_Member" ManuallyRouted="false" />
+        <AssociationConnector Association="LibraryModel.FK_IssueDetail_Issue" ManuallyRouted="false" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>
